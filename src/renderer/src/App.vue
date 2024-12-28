@@ -226,6 +226,7 @@ const captureScreenshot = async () => {
         });
     });
   } catch (error) {
+   
     console.error("截图失败:", error);
     ElMessage.error("截图失败");
   }
