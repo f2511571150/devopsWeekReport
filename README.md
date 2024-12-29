@@ -32,14 +32,32 @@ npm run dev
 
 # 构建应用
 npm run build
+
+# 构建 Windows 安装包
+npm run build:win
+
+# 构建 macOS 安装包
+npm run build:mac
 ```
 
-## 下载安装
+## 构建说明
 
-选择适合您系统的安装包：
+构建过程会在 `dist` 目录下生成对应的安装包：
 
-- [Windows 安装包](install/oneweekreport-1.0.0-setup.exe)
-- [macOS 安装包](install/oneweekreport-1.0.0.dmg)
+### Windows 安装包
+运行 `npm run build:win` 后会生成：
+- `dist/oneweekreport-1.0.0-setup.exe`：Windows 安装程序
+- 安装完成后可以在开始菜单找到应用程序
+
+### macOS 安装包
+运行 `npm run build:mac` 后会生成：
+- `dist/oneweekreport-1.0.0.dmg`：macOS 安装镜像
+- 双击 .dmg 文件，将应用拖入 Applications 文件夹即可完成安装
+
+注意事项：
+1. 首次运行需要安装项目依赖：`npm install`
+2. macOS 版本首次打开可能需要在"系统偏好设置"中允许运行
+3. 确保您的 Node.js 环境已正确配置
 
 ## 配置说明
 
