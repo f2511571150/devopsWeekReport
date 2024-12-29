@@ -47,22 +47,66 @@
           display: flex;
           align-items: center;
           gap: 5px;
-          padding: 5px;
+          padding: 8px 20px;
         "
       >
-        <token-settings ref="tokenSettingsRef" />
-        <el-button type="success" @click="refreshData" :loading="loading.value">
-          刷新数据
-        </el-button>
-        <el-button type="primary" @click="captureScreenshot"> 截图 </el-button>
+        <token-settings ref="tokenSettingsRef" @save-success="handleSaveSuccess">
+          <template #default="{ openDialog }">
+            <el-tooltip
+              content="Azure DevOps 设置"
+              placement="bottom"
+              effect="dark"
+            >
+              <el-button
+                type="primary"
+                :icon="Setting"
+                circle
+                size="small"
+                style="margin-left: 0px"
+                @click="openDialog"
+              />
+            </el-tooltip>
+          </template>
+        </token-settings>
+
+        <el-tooltip
+          content="刷新数据"
+          placement="bottom"
+          effect="dark"
+        >
+          <el-button
+            type="success"
+            :icon="Refresh"
+            circle
+            size="small"
+            @click="refreshData"
+            :loading="loading"
+            style="margin-left: 0px"
+          />
+        </el-tooltip>
+
+        <el-tooltip
+          content="截图"
+          placement="bottom"
+          effect="dark"
+        >
+          <el-button
+            type="primary"
+            :icon="Camera"
+            circle
+            size="small"
+            style="margin-left: 0px"
+            @click="captureScreenshot"
+          />
+        </el-tooltip>
       </div>
 
       <div
         class="main-content"
-        style="flex-grow: 1; overflow: auto; padding: 20px;background:#fff; "
+        style="flex-grow: 1; overflow: auto; padding: 8px 20px; background: #fff; position: relative"
       >
-        <!-- <div>DIV</div> -->
-        <task-list :tasks="createdTasks" type="created" />
+        <Loading :show="loading" text="正在获取最新数据..." />
+        <task-list :tasks="createdTasks" type="created" style="margin-top: 0"  />
         <task-list :tasks="closedTasks" type="closed" />
         <task-list :tasks="closedBugs" type="bugs" />
         <task-list :tasks="activeTasks" type="active" />
@@ -77,7 +121,7 @@
         <span class="dialog-footer">
           <el-button @click="reportDialogVisible = false">关闭</el-button>
           <el-button type="primary" @click="copyReport">
-            复制到剪贴板 
+            复制到剪贴板
           </el-button>
         </span>
       </template>
@@ -89,8 +133,10 @@
 import { ref, onMounted } from "vue";
 import TaskList from "./components/TaskList.vue";
 import TokenSettings from "./components/TokenSettings.vue";
+import Loading from "./components/Loading.vue";
 import { ElMessage } from "element-plus";
 import html2canvas from "html2canvas";
+import { Setting, Refresh, Camera } from '@element-plus/icons-vue';
 
 const activeTab = ref("created");
 const createdTasks = ref([]);
@@ -108,7 +154,7 @@ const filterTasksByProjects = (tasks) => {
   if (!settings?.projects || !Array.isArray(settings.projects)) {
     return tasks;
   }
-  return tasks.filter(task => settings.projects.includes(task.project));
+  return tasks.filter((task) => settings.projects.includes(task.project));
 };
 
 const checkToken = () => {
@@ -131,7 +177,7 @@ const fetchTasks = async () => {
     // );
     const result = await window.api.getTasks(settings);
     console.log(result);
-    
+
     // 过滤各类任务列表
     createdTasks.value = filterTasksByProjects(result.createdTasks);
     closedTasks.value = filterTasksByProjects(result.closedTasks);
@@ -226,10 +272,13 @@ const captureScreenshot = async () => {
         });
     });
   } catch (error) {
-   
     console.error("截图失败:", error);
     ElMessage.error("截图失败");
   }
+};
+
+const handleSaveSuccess = async () => {
+  await fetchTasks();
 };
 
 const refreshData = () => {

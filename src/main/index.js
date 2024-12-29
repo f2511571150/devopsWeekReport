@@ -90,6 +90,7 @@ function createWindow() {
     width: 1200,
     height: 800,
     show: false,
+    title: 'WeekReport',
     autoHideMenuBar: true,
     ...(process.platform === "linux" ? { icon } : {}),
     webPreferences: {
@@ -103,6 +104,9 @@ function createWindow() {
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();
   });
+
+  // Set window title
+  mainWindow.setTitle('WeekReport');
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
@@ -133,14 +137,14 @@ ipcMain.handle("get-tasks", async (_, settings) => {
         azureDevOpsService.getCreatedTasks(settings, startDate, endDate),
         azureDevOpsService.getClosedTasks(settings, startDate, endDate),
         azureDevOpsService.getClosedBugs(settings, startDate, endDate),
-        azureDevOpsService.getActiveOrNewTasks(settings)
+        azureDevOpsService.getActiveOrNewTasks(settings),
       ]);
 
     return {
       createdTasks,
       closedTasks,
       closedBugs,
-      activeTasks
+      activeTasks,
     };
   } catch (error) {
     console.error(
@@ -173,21 +177,21 @@ ipcMain.handle("generate-report", async (_, data) => {
 });
 
 // 处理打开外部链接
-ipcMain.handle('open-external-link', async (_, url) => {
+ipcMain.handle("open-external-link", async (_, url) => {
   try {
-    console.log('Opening external link:', url);
+    console.log("Opening external link:", url);
     // 检查URL是否合法
     const validUrl = new URL(url);
-    if (validUrl.protocol !== 'http:' && validUrl.protocol !== 'https:') {
-      throw new Error('Invalid URL protocol');
+    if (validUrl.protocol !== "http:" && validUrl.protocol !== "https:") {
+      throw new Error("Invalid URL protocol");
     }
     await shell.openExternal(url, {
       activate: true,
-      workingDirectory: process.cwd()
+      workingDirectory: process.cwd(),
     });
     return { success: true };
   } catch (error) {
-    console.error('Failed to open external link:', error);
+    console.error("Failed to open external link:", error);
     throw error;
   }
 });
