@@ -77,7 +77,7 @@
         <span class="dialog-footer">
           <el-button @click="reportDialogVisible = false">关闭</el-button>
           <el-button type="primary" @click="copyReport">
-            复制到剪贴板
+            复制到剪贴板 
           </el-button>
         </span>
       </template>
@@ -113,7 +113,7 @@ const filterTasksByProjects = (tasks) => {
 
 const checkToken = () => {
   if (!tokenSettingsRef.value?.isConfigured()) {
-    ElMessage.warning("请先完成Azure DevOps设置");
+    ElMessage.warning("请先完成Azure DevOps设置  ");
     return false;
   }
   return true;
