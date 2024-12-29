@@ -59,7 +59,7 @@
 
       <div
         class="main-content"
-        style="flex-grow: 1; overflow: auto; padding: 20px"
+        style="flex-grow: 1; overflow: auto; padding: 20px;background:#fff; "
       >
         <!-- <div>DIV</div> -->
         <task-list :tasks="createdTasks" type="created" />

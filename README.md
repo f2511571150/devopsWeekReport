@@ -34,6 +34,13 @@ npm run dev
 npm run build
 ```
 
+## 下载安装
+
+选择适合您系统的安装包：
+
+- [Windows 安装包](install/oneweekreport-1.0.0-setup.exe)
+- [macOS 安装包](install/oneweekreport-1.0.0.dmg)
+
 ## 配置说明
 
 1. 点击"设置"按钮
